@@ -78,7 +78,7 @@ usePresence(computed(() => t('presence.instance', {
 
 const compact = injection(kCompact)
 const onScroll = useCompactScroll(compact)
-useBlockSharedTooltip()
+const { start, end } = useBlockSharedTooltip()
 const { arrivedState } = useScroll(containerRef)
 provide('scroll', arrivedState)
 provide('scrollElement', containerRef)
