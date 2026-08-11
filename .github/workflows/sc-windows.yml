@@ -1,0 +1,75 @@
+name: SC Launcher Windows Build
+
+on:
+  push:
+    branches:
+      - sc-redesign
+    paths:
+      - "xmcl-runtime/**"
+      - "xmcl-runtime-api/**"
+      - "xmcl-keystone-ui/**"
+      - "xmcl-electron-app/**"
+      - "packages/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/sc-windows.yml"
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    env:
+      ELECTRON_CACHE: ${{ github.workspace }}/.cache/electron
+      ELECTRON_BUILDER_CACHE: ${{ github.workspace }}/.cache/electron-builder
+      BUILD_TARGET: all
+      BUILD_NUMBER: ${{ github.run_number }}
+      NODE_OPTIONS: --max-old-space-size=32768
+      NODE_ENV: production
+      RELEASE: false
+      PUBLISHER: CN=SignPath Foundation, O=SignPath Foundation, L=Lewes, S=Delaware, C=US
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Cache Electron
+        uses: actions/cache@v5
+        with:
+          path: |
+            ${{ github.workspace }}/.cache/electron
+            ${{ github.workspace }}/.cache/electron-builder
+          key: windows-electron-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build SC Launcher
+        run: |
+          pnpm run --prefix xmcl-keystone-ui build
+          pnpm run --prefix xmcl-electron-app build
+
+      - name: Upload Windows installer
+        uses: actions/upload-artifact@v6
+        with:
+          name: SC-Launcher-Windows-${{ github.run_number }}
+          if-no-files-found: error
+          path: |
+            xmcl-electron-app/build/output/SC-Launcher-*-Setup.exe
+            xmcl-electron-app/build/output/*.exe
+            xmcl-electron-app/build/output/*.zip
+            xmcl-electron-app/build/output/*.appx
+
+      - name: Upload portable Windows build
+        uses: actions/upload-artifact@v6
+        with:
+          name: SC-Launcher-Windows-Portable-${{ github.run_number }}
+          if-no-files-found: warn
+          path: xmcl-electron-app/build/output/win-unpacked/
