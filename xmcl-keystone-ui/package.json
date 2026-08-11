@@ -5,7 +5,7 @@
     "productName": "SC Launcher",
     "version": "0.62.0",
     "author": "ci010 <cijhn@hotmail.com>",
-    "description": "SC Launcher - A clean, modern Minecraft launcher",
+    "description": "SC Launcher - an organized, clean Minecraft launcher",
     "license": "MIT",
     "engines": {
         "node": ">=20"
@@ -76,7 +76,7 @@
         "chalk": "^4.1.2",
         "js-yaml": "^4.1.0",
         "@types/js-yaml": "^4.0.9",
-        "cross-env": "^5.2.1",
+        "cross-env": "^5.2.0",
         "lightningcss": "^1.32.0",
         "oxlint": "^1.63.0",
         "sass": "^1.81.0",
