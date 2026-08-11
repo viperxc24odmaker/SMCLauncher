@@ -28,114 +28,42 @@ import StoreEntry from '@/views/StoreEntry.vue'
 import StoreProjectCurseforge from '@/views/StoreProjectCurseforge.vue'
 import StoreProjectFeedTheBeast from '@/views/StoreProjectFeedTheBeast.vue'
 import StoreProjectModrinth from '@/views/StoreProjectModrinth.vue'
+import SCDashboard from '@/views/SCDashboard.vue'
+import SCInstances from '@/views/SCInstances.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 export const router = createRouter({
   history: createWebHashHistory(),
   routes: [
+    { path: '/dashboard', component: SCDashboard },
+    { path: '/instances', component: SCInstances },
     {
       path: '/',
       component: HomeLayout,
       children: [
-        {
-          path: '',
-          components: {
-            default: Home,
-            extensions: HomeExtension,
-            actions: HomeActions,
-          },
-        },
-        {
-          path: 'save',
-          components: {
-            default: Save,
-            extensions: SaveExtension,
-            actions: SaveActions,
-          },
-        },
-        {
-          path: 'mods',
-          components: {
-            default: Mod,
-            extensions: ModExtension,
-            actions: ModActions,
-          },
-        },
-        {
-          path: 'resourcepacks',
-          components: {
-            default: ResourcePack,
-            extensions: ResourcePackExtension,
-            actions: ResourcePackActions,
-          },
-        },
-        {
-          path: 'shaderpacks',
-          components: {
-            default: ShaderPack,
-            extensions: ShaderPackExtension,
-            actions: ShaderPackActions,
-          },
-        },
-        {
-          path: 'blueprints',
-          components: {
-            default: Blueprint,
-            extensions: BlueprintExtension,
-            actions: BlueprintActions,
-          },
-        },
-        {
-          path: 'base-setting',
-          components: {
-            default: BaseSetting,
-            extensions: BaseSettingExtension,
-            actions: BaseSettingActions,
-          },
-        },
-        {
-          path: 'base-setting/modrinth-project',
-          redirect: { path: '/base-setting', query: { target: 'modrinth-project' } },
-        },
+        { path: '', components: { default: Home, extensions: HomeExtension, actions: HomeActions } },
+        { path: 'save', components: { default: Save, extensions: SaveExtension, actions: SaveActions } },
+        { path: 'mods', components: { default: Mod, extensions: ModExtension, actions: ModActions } },
+        { path: 'resourcepacks', components: { default: ResourcePack, extensions: ResourcePackExtension, actions: ResourcePackActions } },
+        { path: 'shaderpacks', components: { default: ShaderPack, extensions: ShaderPackExtension, actions: ShaderPackActions } },
+        { path: 'blueprints', components: { default: Blueprint, extensions: BlueprintExtension, actions: BlueprintActions } },
+        { path: 'base-setting', components: { default: BaseSetting, extensions: BaseSettingExtension, actions: BaseSettingActions } },
+        { path: 'base-setting/modrinth-project', redirect: { path: '/base-setting', query: { target: 'modrinth-project' } } },
       ],
     },
     {
       path: '/store',
       component: Store,
       children: [
-        {
-          path: '',
-          component: StoreEntry,
-        },
-        {
-          path: 'modrinth/:id',
-          component: StoreProjectModrinth,
-          props: (route) => ({ id: route.params.id }),
-        },
-        {
-          path: 'curseforge/:id',
-          component: StoreProjectCurseforge,
-          props: (route) => ({ id: Number(route.params.id) }),
-        },
-        {
-          path: 'ftb/:id',
-          component: StoreProjectFeedTheBeast,
-          props: (route) => ({ id: Number(route.params.id) }),
-        },
+        { path: '', component: StoreEntry },
+        { path: 'modrinth/:id', component: StoreProjectModrinth, props: (route) => ({ id: route.params.id }) },
+        { path: 'curseforge/:id', component: StoreProjectCurseforge, props: (route) => ({ id: Number(route.params.id) }) },
+        { path: 'ftb/:id', component: StoreProjectFeedTheBeast, props: (route) => ({ id: Number(route.params.id) }) },
       ],
     },
-    {
-      path: '/setting',
-      component: Setting,
-    },
-    {
-      path: '/me',
-      component: Me,
-    },
-    {
-      path: '/multiplayer',
-      component: Multiplayer,
-    },
+    { path: '/setting', component: Setting },
+    { path: '/me', component: Me },
+    { path: '/multiplayer', component: Multiplayer },
+    { path: '/:pathMatch(.*)*', redirect: '/dashboard' },
   ],
 })
-
