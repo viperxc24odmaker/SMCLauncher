@@ -26,7 +26,6 @@ jobs:
       NODE_OPTIONS: --max-old-space-size=32768
       NODE_ENV: production
       RELEASE: false
-      PUBLISHER: CN=SignPath Foundation, O=SignPath Foundation, L=Lewes, S=Delaware, C=US
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -57,24 +56,28 @@ jobs:
       - name: Build Windows installer
         run: pnpm run --prefix xmcl-electron-app build
 
-      - name: Verify Windows artifacts
+      - name: Verify Windows installer
         shell: pwsh
         run: |
           $output = "xmcl-electron-app/build/output"
           if (-not (Test-Path $output)) { throw "Electron Builder output directory was not created." }
-          $exe = Get-ChildItem -Path $output -Filter "*.exe" -Recurse -File
-          if ($exe.Count -eq 0) { throw "No Windows .exe was produced in $output." }
-          $exe | ForEach-Object { Write-Host "Found installer: $($_.FullName) ($([math]::Round($_.Length / 1MB, 2)) MB)" }
+          $exe = Get-ChildItem -Path $output -Filter "*-Setup.exe" -Recurse -File
+          if ($exe.Count -eq 0) { throw "No NSIS Setup.exe was produced in $output." }
+          $exe | ForEach-Object { Write-Host "FOUND INSTALLER: $($_.FullName) ($([math]::Round($_.Length / 1MB, 2)) MB)" }
 
-      - name: Upload Windows installer
+      - name: Upload SC Launcher installer
         uses: actions/upload-artifact@v6
         with:
-          name: SC-Launcher-Windows-${{ github.run_number }}
+          name: SC-Launcher-Installer-${{ github.run_number }}
           if-no-files-found: error
-          path: |
-            xmcl-electron-app/build/output/**/*.exe
-            xmcl-electron-app/build/output/**/*.zip
-            xmcl-electron-app/build/output/**/*.appx
+          path: xmcl-electron-app/build/output/**/*-Setup.exe
+
+      - name: Upload Windows archives
+        uses: actions/upload-artifact@v6
+        with:
+          name: SC-Launcher-Windows-Archives-${{ github.run_number }}
+          if-no-files-found: warn
+          path: xmcl-electron-app/build/output/**/*.zip
 
       - name: Upload portable Windows build
         uses: actions/upload-artifact@v6
