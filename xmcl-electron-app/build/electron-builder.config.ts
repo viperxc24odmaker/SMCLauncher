@@ -5,23 +5,21 @@ import type { Configuration } from 'electron-builder'
 dotenv()
 
 export const config = {
-  productName: 'X Minecraft Launcher',
-  appId: 'xmcl',
+  productName: 'SC Launcher',
+  appId: 'com.sc.launcher',
   directories: {
     output: 'build/output',
     buildResources: 'build',
     app: '.',
   },
   protocols: {
-    name: 'XMCL',
-    schemes: ['xmcl'],
+    name: 'SC Launcher',
+    schemes: ['xmcl', 'sc-launcher'],
   },
-  // assign publish for auto-updater
-  // set this to your own repo!
   publish: [{
     provider: 'github',
-    owner: 'voxelum',
-    repo: 'x-minecraft-launcher',
+    owner: 'viperxc24odmaker',
+    repo: 'SMCLauncher',
   }],
   files: [{
     from: 'dist',
@@ -37,41 +35,27 @@ export const config = {
     to: 'agent-documents',
     filter: ['**/*.md'],
   }],
-  artifactName: 'xmcl-${version}-${platform}-${arch}.${ext}',
+  artifactName: 'SC-Launcher-${version}-${platform}-${arch}.${ext}',
   appx: {
-    displayName: 'X Minecraft Launcher',
-    applicationId: 'xmcl',
-    identityName: 'xmcl',
+    displayName: 'SC Launcher',
+    applicationId: 'sc-launcher',
+    identityName: 'sc-launcher',
     backgroundColor: 'transparent',
     publisher: process.env.PUBLISHER,
-    publisherDisplayName: 'CI010',
+    publisherDisplayName: 'SC Launcher',
     setBuildNumber: true,
   },
   dmg: {
-    artifactName: 'xmcl-${version}-${arch}.${ext}',
+    artifactName: 'SC-Launcher-${version}-${arch}.${ext}',
     contents: [
-      {
-        x: 410,
-        y: 150,
-        type: 'link',
-        path: '/Applications',
-      },
-      {
-        x: 130,
-        y: 150,
-        type: 'file',
-      },
+      { x: 410, y: 150, type: 'link', path: '/Applications' },
+      { x: 130, y: 150, type: 'file' },
     ],
   },
   mac: {
     icon: 'icons/dark.icns',
     darkModeSupport: true,
-    target: [
-      {
-        target: 'dmg',
-        arch: ['arm64', 'x64'],
-      },
-    ],
+    target: [{ target: 'dmg', arch: ['arm64', 'x64'] }],
     extendInfo: {
       NSMicrophoneUsageDescription: 'A Minecraft mod wants to access your microphone.',
       NSCameraUsageDescription: 'Please give us access to your camera',
@@ -81,30 +65,33 @@ export const config = {
   },
   win: {
     certificateFile: undefined as string | undefined,
-    publisherName: 'CI010',
+    publisherName: 'SC Launcher',
     icon: 'icons/dark.ico',
     electronLanguages: ['en-US'],
     target: [
-      {
-        target: 'zip',
-        arch: [
-          'x64',
-          'ia32',
-        ],
-      },
+      { target: 'nsis', arch: ['x64', 'ia32'] },
+      { target: 'zip', arch: ['x64', 'ia32'] },
       'appx',
     ],
   },
+  nsis: {
+    oneClick: false,
+    allowToChangeInstallationDirectory: true,
+    createDesktopShortcut: true,
+    createStartMenuShortcut: true,
+    shortcutName: 'SC Launcher',
+    artifactName: 'SC-Launcher-${version}-Setup.${ext}',
+  },
   linux: {
-    executableName: 'xmcl',
+    executableName: 'sc-launcher',
     electronLanguages: ['en-US'],
     desktop: {
-      MimeType: 'x-scheme-handler/xmcl',
-      StartupWMClass: 'xmcl',
+      MimeType: 'x-scheme-handler/xmcl;x-scheme-handler/sc-launcher',
+      StartupWMClass: 'sc-launcher',
     },
     category: 'Game',
     icon: 'icons/dark.icns',
-    artifactName: 'xmcl-${version}-${arch}.${ext}',
+    artifactName: 'SC-Launcher-${version}-${arch}.${ext}',
     target: [
       { target: 'deb', arch: ['x64', 'arm64'] },
       { target: 'rpm', arch: ['x64', 'arm64'] },
@@ -113,9 +100,5 @@ export const config = {
       { target: 'pacman', arch: ['x64', 'arm64'] },
     ],
   },
-  snap: {
-    publish: [
-      'github',
-    ],
-  },
+  snap: { publish: ['github'] },
 } satisfies Configuration
