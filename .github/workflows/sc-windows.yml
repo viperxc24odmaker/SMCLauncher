@@ -51,10 +51,20 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build SC Launcher
+      - name: Build SC Launcher UI
+        run: pnpm run --prefix xmcl-keystone-ui build
+
+      - name: Build Windows installer
+        run: pnpm run --prefix xmcl-electron-app build
+
+      - name: Verify Windows artifacts
+        shell: pwsh
         run: |
-          pnpm run --prefix xmcl-keystone-ui build
-          pnpm run --prefix xmcl-electron-app build
+          $output = "xmcl-electron-app/build/output"
+          if (-not (Test-Path $output)) { throw "Electron Builder output directory was not created." }
+          $exe = Get-ChildItem -Path $output -Filter "*.exe" -Recurse -File
+          if ($exe.Count -eq 0) { throw "No Windows .exe was produced in $output." }
+          $exe | ForEach-Object { Write-Host "Found installer: $($_.FullName) ($([math]::Round($_.Length / 1MB, 2)) MB)" }
 
       - name: Upload Windows installer
         uses: actions/upload-artifact@v6
@@ -62,10 +72,9 @@ jobs:
           name: SC-Launcher-Windows-${{ github.run_number }}
           if-no-files-found: error
           path: |
-            xmcl-electron-app/build/output/SC-Launcher-*-Setup.exe
-            xmcl-electron-app/build/output/*.exe
-            xmcl-electron-app/build/output/*.zip
-            xmcl-electron-app/build/output/*.appx
+            xmcl-electron-app/build/output/**/*.exe
+            xmcl-electron-app/build/output/**/*.zip
+            xmcl-electron-app/build/output/**/*.appx
 
       - name: Upload portable Windows build
         uses: actions/upload-artifact@v6
