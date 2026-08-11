@@ -36,15 +36,6 @@ export const config = {
     filter: ['**/*.md'],
   }],
   artifactName: 'SC-Launcher-${version}-${platform}-${arch}.${ext}',
-  appx: {
-    displayName: 'SC Launcher',
-    applicationId: 'sc-launcher',
-    identityName: 'sc-launcher',
-    backgroundColor: 'transparent',
-    publisher: process.env.PUBLISHER,
-    publisherDisplayName: 'SC Launcher',
-    setBuildNumber: true,
-  },
   dmg: {
     artifactName: 'SC-Launcher-${version}-${arch}.${ext}',
     contents: [
@@ -69,9 +60,8 @@ export const config = {
     icon: 'icons/dark.ico',
     electronLanguages: ['en-US'],
     target: [
-      { target: 'nsis', arch: ['x64', 'ia32'] },
-      { target: 'zip', arch: ['x64', 'ia32'] },
-      'appx',
+      { target: 'nsis', arch: ['x64'] },
+      { target: 'zip', arch: ['x64'] },
     ],
   },
   nsis: {
@@ -81,6 +71,15 @@ export const config = {
     createStartMenuShortcut: true,
     shortcutName: 'SC Launcher',
     artifactName: 'SC-Launcher-${version}-Setup.${ext}',
+  },
+  appx: {
+    displayName: 'SC Launcher',
+    applicationId: 'SCLauncher',
+    identityName: 'SCLauncher',
+    backgroundColor: 'transparent',
+    publisher: process.env.PUBLISHER,
+    publisherDisplayName: 'SC Launcher',
+    setBuildNumber: true,
   },
   linux: {
     executableName: 'sc-launcher',
